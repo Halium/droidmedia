@@ -186,11 +186,11 @@ ifeq ($(ANDROID_MAJOR),$(filter $(ANDROID_MAJOR),8 9))
 LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.4
 endif
 
-ifeq ($(ANDROID_MAJOR),$(filter $(ANDROID_MAJOR),10))
+ifeq ($(ANDROID_MAJOR),$(filter $(ANDROID_MAJOR),10 12))
 LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.5
 endif
 
-ifeq ($(ANDROID_MAJOR),$(filter $(ANDROID_MAJOR),11))
+ifeq ($(ANDROID_MAJOR),$(filter $(ANDROID_MAJOR),11 12))
 LOCAL_SHARED_LIBRARIES += android.hardware.camera.provider@2.6
 endif
 
