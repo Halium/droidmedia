@@ -118,7 +118,12 @@ LOCAL_SHARED_LIBRARIES += libactivitymanager_aidl \
 endif
 
 ifeq ($(shell test $(ANDROID_MAJOR) -ge 15 && echo true),true)
-LOCAL_SHARED_LIBRARIES += framework-permission-aidl-cpp
+LOCAL_SHARED_LIBRARIES += framework-permission-aidl-cpp \
+			  process_info_service_aidl-cpp
+endif
+
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 16 && echo true),true)
+LOCAL_SHARED_LIBRARIES += libcameracompatbilityinfo
 endif
 
 LOCAL_CPPFLAGS=-DANDROID_MAJOR=$(ANDROID_MAJOR) -DANDROID_MINOR=$(ANDROID_MINOR) -DANDROID_MICRO=$(ANDROID_MICRO) $(FORCE_HAL_PARAM) $(LEGACY_ANDROID_REVISION_PARAM) -Wno-unused-parameter
@@ -353,7 +358,9 @@ LOCAL_SHARED_LIBRARIES += libvendorsupport \
 endif
 
 ifeq ($(shell test $(ANDROID_MAJOR) -ge 16 && echo true),true)
-LOCAL_SHARED_LIBRARIES += libtinyxml2
+LOCAL_SHARED_LIBRARIES += libtinyxml2 \
+                          process_info_service_aidl-cpp \
+                          libcameracompatbilityinfo
 endif
 
 LOCAL_MODULE_TAGS := optional
@@ -419,11 +426,28 @@ endif
 
 ifeq ($(shell test $(ANDROID_MAJOR) -ge 13 && echo true),true)
 LOCAL_STATIC_LIBRARIES += packagemanager_aidl-cpp
+LOCAL_SHARED_LIBRARIES += libcamera_client
+LOCAL_AIDL_INCLUDES += frameworks/av/camera/aidl
 endif
 
 ifeq ($(shell test $(ANDROID_MAJOR) -ge 14 && echo true),true)
 LOCAL_SHARED_LIBRARIES += android.frameworks.stats-V2-ndk \
                           android.frameworks.sensorservice-V1-ndk
+endif
+
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 15 && echo true),true)
+LOCAL_STATIC_LIBRARIES += libvirtualdevicebuildflags
+
+LOCAL_SHARED_LIBRARIES += libvendorsupport \
+                          android.companion.virtualdevice.flags-aconfig-cc \
+                          android.hardware.common-V2-cpp \
+                          android.hardware.common.fmq-V1-cpp
+endif
+
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 16 && echo true),true)
+LOCAL_SHARED_LIBRARIES += libtinyxml2 \
+                          process_info_service_aidl-cpp \
+                          libcameracompatbilityinfo
 endif
 
 LOCAL_MODULE_TAGS := optional
@@ -518,6 +542,21 @@ endif
 ifeq ($(shell test $(ANDROID_MAJOR) -ge 14 && echo true),true)
 LOCAL_SHARED_LIBRARIES += android.frameworks.stats-V2-ndk \
                           android.frameworks.sensorservice-V1-ndk
+endif
+
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 15 && echo true),true)
+LOCAL_STATIC_LIBRARIES += libvirtualdevicebuildflags
+
+LOCAL_SHARED_LIBRARIES += libvendorsupport \
+                          android.companion.virtualdevice.flags-aconfig-cc \
+                          android.hardware.common-V2-cpp \
+                          android.hardware.common.fmq-V1-cpp
+endif
+
+ifeq ($(shell test $(ANDROID_MAJOR) -ge 16 && echo true),true)
+LOCAL_SHARED_LIBRARIES += libtinyxml2 \
+                          process_info_service_aidl-cpp \
+                          libcameracompatbilityinfo
 endif
 
 LOCAL_MODULE := libminisf

@@ -46,7 +46,10 @@
 #include "droidmediabuffer.h"
 #include "private.h"
 
-#if ANDROID_MAJOR >= 15
+#if ANDROID_MAJOR >= 16
+#include <android/content/res/CameraCompatibilityInfo.h>
+#include <android/content/AttributionSourceState.h>
+#elif ANDROID_MAJOR >= 15
 #include <android/content/AttributionSourceState.h>
 #endif
 
@@ -335,7 +338,11 @@ bool droid_media_camera_get_info(DroidMediaCameraInfo *info, int camera_number)
 #endif
 
     if (android::Camera::getCameraInfo(camera_number,
-#if ANDROID_MAJOR >= 13 && (!defined(LEGACY_ANDROID_13_REVISION) || LEGACY_ANDROID_13_REVISION >= 32)
+#if ANDROID_MAJOR >= 16
+                                       android::content::res::CameraCompatibilityInfo{},
+#elif ANDROID_MAJOR >= 15
+                                       false/*overrideToPortrait*/,
+#elif ANDROID_MAJOR >= 13 && (!defined(LEGACY_ANDROID_13_REVISION) || LEGACY_ANDROID_13_REVISION >= 32)
                                        false/*overrideToPortrait*/,
 #endif
 #if ANDROID_MAJOR >= 15
@@ -507,7 +514,21 @@ DroidMediaCamera *droid_media_camera_connect(int camera_number)
     android::OK != android::Camera::connectLegacy(camera_number, FORCE_HAL << 8, android::String16("droidmedia"),
 					     android::Camera::USE_CALLING_UID, cam->m_camera);
 #else // Default connect
-#if (ANDROID_MAJOR >= 15)
+#if (ANDROID_MAJOR >= 16)
+    android::content::AttributionSourceState clientAttribution;
+    clientAttribution.uid = android::hardware::ICameraService::USE_CALLING_UID;
+    clientAttribution.pid = android::hardware::ICameraService::USE_CALLING_PID;
+    clientAttribution.deviceId = android::kDefaultDeviceId;
+    clientAttribution.packageName = "droidmedia";
+
+    cam->m_camera = android::Camera::connect(camera_number
+					     , __ANDROID_API_FUTURE__
+					     , android::content::res::CameraCompatibilityInfo{}
+					     , false
+					     , clientAttribution
+					     , 0
+					     );
+#elif (ANDROID_MAJOR >= 15)
     android::content::AttributionSourceState clientAttribution;
     clientAttribution.uid = android::hardware::ICameraService::USE_CALLING_UID;
     clientAttribution.pid = android::hardware::ICameraService::USE_CALLING_PID;

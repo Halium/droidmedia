@@ -103,15 +103,18 @@ main(int, char**)
 #if ANDROID_MAJOR >= 12
     FakePackageManagerNative::instantiate();
 #endif
-#if ANDROID_MAJOR >= 14
+#if ANDROID_MAJOR >= 13
+    FakeCameraServiceProxy::instantiate();
     FakePermissionChecker::instantiate();
+#endif
+#if ANDROID_MAJOR >= 14
     FakeSensorManagerAidl::instantiate();
     FakeStatsAidl::instantiate();
 #endif
     // Camera service needs to be told which users may use the camera
     sp<IBinder> binder;
     do {
-        binder = sm->getService(String16("media.camera"));
+        binder = sm->waitForService(String16("media.camera"));
         if (binder != NULL) {
             break;
         }

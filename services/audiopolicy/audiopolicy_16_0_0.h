@@ -103,13 +103,16 @@ public:
                                       media::GetOutputForAttrResponse *output) override {
         return ::binder::Status::ok();
     }
-    ::binder::Status startOutput(int32_t portId) override {
+    ::binder::Status startOutput(int32_t portId, media::StartOutputResponse* _aidl_return) override {
         return ::binder::Status::ok();
     }
     ::binder::Status stopOutput(int32_t portId) override {
         return ::binder::Status::ok();
     }
     ::binder::Status releaseOutput(int32_t portId) override {
+        return ::binder::Status::ok();
+    }
+    ::binder::Status forceReleaseDirectOutput(int32_t output) override {
         return ::binder::Status::ok();
     }
     ::binder::Status getInputForAttr(const media::audio::common::AudioAttributes &,
@@ -171,6 +174,34 @@ public:
     }
     ::binder::Status getMaxVolumeIndexForAttributes(const media::audio::common::AudioAttributes &,
                                                     int32_t *index) override {
+        return ::binder::Status::ok();
+    }
+
+    ::binder::Status setVolumeIndexForGroup(int32_t groupId,
+                                            const media::audio::common::AudioDeviceDescription &device,
+                                            int32_t index, bool muted) override {
+        return ::binder::Status::ok();
+    }
+    ::binder::Status getVolumeIndexForGroup(int32_t groupId,
+                                            const media::audio::common::AudioDeviceDescription &device,
+                                            int32_t *_aidl_return) override {
+        *_aidl_return = 0;
+        return ::binder::Status::ok();
+    }
+    ::binder::Status getMaxVolumeIndexForGroup(int32_t groupId,
+                                               int32_t *_aidl_return) override {
+        *_aidl_return = 0;
+        return ::binder::Status::ok();
+    }
+    ::binder::Status getMinVolumeIndexForGroup(int32_t groupId,
+                                               int32_t *_aidl_return) override {
+        *_aidl_return = 0;
+        return ::binder::Status::ok();
+    }
+    ::binder::Status setMaxVolumeIndexForGroup(int32_t groupId, int32_t maxIndex) override {
+        return ::binder::Status::ok();
+    }
+    ::binder::Status setMinVolumeIndexForGroup(int32_t groupId, int32_t minIndex) override {
         return ::binder::Status::ok();
     }
 
@@ -278,7 +309,7 @@ public:
     }
 
     ::binder::Status listDeclaredDevicePorts(media::AudioPortRole role,
-                                             std::vector<media::AudioPortFw>* _aidl_return) {
+                                             std::vector<media::AudioPortFw>* _aidl_return) override {
         return ::binder::Status::ok();
     }
     ::binder::Status getAudioPort(int portId,
@@ -328,7 +359,7 @@ public:
         return ::binder::Status::ok();
     }
 #endif
-    ::binder::Status updatePolicyMixes(const std::vector<media::AudioMixUpdate>& updates) {
+    ::binder::Status updatePolicyMixes(const std::vector<media::AudioMixUpdate>& updates) override {
         return ::binder::Status::ok();
     }
     ::binder::Status setUidDeviceAffinities(int32_t uid,
@@ -426,6 +457,14 @@ public:
     ::binder::Status isCallScreenModeSupported(bool* _aidl_return) override {
         return ::binder::Status::ok();
     }
+    ::binder::Status getAttributesForStreamType(media::audio::common::AudioStreamType stream,
+                                                media::audio::common::AudioAttributes *_aidl_return) override {
+        return ::binder::Status::ok();
+    }
+    ::binder::Status getStreamTypeForAttributes(const media::audio::common::AudioAttributes &attributes,
+                                                media::audio::common::AudioStreamType *_aidl_return) override {
+        return ::binder::Status::ok();
+    }
     ::binder::Status setDevicesRoleForStrategy(int32_t strategy,
                                                media::DeviceRole role,
                                                const std::vector<media::audio::common::AudioDevice>& devices) override {
@@ -436,7 +475,7 @@ public:
                                                   const ::std::vector<media::audio::common::AudioDevice>& devices) override {
         return ::binder::Status::ok();
     }
-    ::binder::Status clearDevicesRoleForStrategy(int32_t strategy, media::DeviceRole role) {
+    ::binder::Status clearDevicesRoleForStrategy(int32_t strategy, media::DeviceRole role) override {
         return ::binder::Status::ok();
     }
     ::binder::Status getDevicesForRoleAndStrategy(int32_t strategy,
@@ -491,31 +530,31 @@ public:
                                                     std::vector<media::audio::common::AudioProfile>* _aidl_return) override {
         return ::binder::Status::ok();
     }
-    ::binder::Status getSupportedMixerAttributes(int32_t portId, ::std::vector<media::AudioMixerAttributesInternal>* _aidl_return) {
+    ::binder::Status getSupportedMixerAttributes(int32_t portId, ::std::vector<media::AudioMixerAttributesInternal>* _aidl_return) override {
         return ::binder::Status::ok();
     }
-    ::binder::Status setPreferredMixerAttributes(const media::audio::common::AudioAttributes& attr, int32_t portId, int32_t uid, const media::AudioMixerAttributesInternal& mixerAttr) {
+    ::binder::Status setPreferredMixerAttributes(const media::audio::common::AudioAttributes& attr, int32_t portId, int32_t uid, const media::AudioMixerAttributesInternal& mixerAttr) override {
         return ::binder::Status::ok();
     }
-    ::binder::Status getPreferredMixerAttributes(const media::audio::common::AudioAttributes& attr, int32_t portId, ::std::optional<media::AudioMixerAttributesInternal>* _aidl_return) {
+    ::binder::Status getPreferredMixerAttributes(const media::audio::common::AudioAttributes& attr, int32_t portId, ::std::optional<media::AudioMixerAttributesInternal>* _aidl_return) override {
         return ::binder::Status::ok();
     }
-    ::binder::Status clearPreferredMixerAttributes(const media::audio::common::AudioAttributes& attr, int32_t portId, int32_t uid) {
+    ::binder::Status clearPreferredMixerAttributes(const media::audio::common::AudioAttributes& attr, int32_t portId, int32_t uid) override {
         return ::binder::Status::ok();
     }
-    ::binder::Status getPermissionController(::android::sp<::com::android::media::permission::INativePermissionController>* _aidl_return) {
+    ::binder::Status getPermissionController(::android::sp<::com::android::media::permission::INativePermissionController>* _aidl_return) override {
         return ::binder::Status::ok();
     }
     ::binder::Status getMmapPolicyInfos(::android::media::audio::common::AudioMMapPolicyType policyType,
-                                        ::std::vector<::android::media::audio::common::AudioMMapPolicyInfo>* _aidl_return) {
+                                        ::std::vector<::android::media::audio::common::AudioMMapPolicyInfo>* _aidl_return) override {
         return ::binder::Status::ok();
     }
     ::binder::Status getMmapPolicyForDevice(::android::media::audio::common::AudioMMapPolicyType policyType,
-                                     ::android::media::audio::common::AudioMMapPolicyInfo* policyInfo) {
+                                     ::android::media::audio::common::AudioMMapPolicyInfo* policyInfo) override {
         return ::binder::Status::ok();
     }
 
-    ::binder::Status setEnableHardening(bool) {
+    ::binder::Status setEnableHardening(bool) override {
         return ::binder::Status::ok();
     }
 
