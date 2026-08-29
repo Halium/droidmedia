@@ -20,6 +20,10 @@
 #include <media/stagefright/CameraSource.h>
 #include <media/stagefright/MetaData.h>
 #include "droidmediarecorder.h"
+#if ANDROID_MAJOR > 6
+#include "AsyncCodecSource.h"
+#include <media/stagefright/foundation/AMessage.h>
+#endif
 #include "private.h"
 #if (ANDROID_MAJOR == 4 && ANDROID_MINOR < 4)
 #include <gui/Surface.h>
@@ -245,5 +249,46 @@ void droid_media_recorder_set_data_callbacks(DroidMediaRecorder *recorder,
   memcpy(&recorder->m_cb, cb, sizeof(recorder->m_cb));
   recorder->m_cb_data = data;
 }
+
+#if ANDROID_MAJOR > 6
+static android::AsyncCodecSource *recorder_codec(DroidMediaRecorder *recorder)
+{
+  return static_cast<android::AsyncCodecSource *>(recorder->m_codec.get());
+}
+#endif
+
+bool droid_media_recorder_request_sync_frame(DroidMediaRecorder *recorder)
+{
+#if ANDROID_MAJOR > 6
+  android::AsyncCodecSource *codec = recorder_codec(recorder);
+  if (!codec) {
+    return false;
+  }
+  android::sp<android::AMessage> params = new android::AMessage;
+  params->setInt32("request-sync", 0);
+  return codec->setParameters(params) == android::OK;
+#else
+  (void)recorder;
+  return false;
+#endif
+}
+
+bool droid_media_recorder_set_video_bitrate(DroidMediaRecorder *recorder, int32_t bitrate)
+{
+#if ANDROID_MAJOR > 6
+  android::AsyncCodecSource *codec = recorder_codec(recorder);
+  if (!codec || bitrate <= 0) {
+    return false;
+  }
+  android::sp<android::AMessage> params = new android::AMessage;
+  params->setInt32("video-bitrate", bitrate);
+  return codec->setParameters(params) == android::OK;
+#else
+  (void)recorder;
+  (void)bitrate;
+  return false;
+#endif
+}
+
 
 };

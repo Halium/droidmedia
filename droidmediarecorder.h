@@ -39,6 +39,12 @@ void droid_media_recorder_stop(DroidMediaRecorder *recorder);
 void droid_media_recorder_set_data_callbacks(DroidMediaRecorder *recorder,
 					     DroidMediaCodecDataCallbacks *cb, void *data);
 
+/* Runtime encoder control while recording (Android > 6, where the
+ * encoder is a MediaCodec behind AsyncCodecSource). Both return false
+ * when unsupported. */
+bool droid_media_recorder_request_sync_frame(DroidMediaRecorder *recorder);
+bool droid_media_recorder_set_video_bitrate(DroidMediaRecorder *recorder, int32_t bitrate);
+
 #ifdef __cplusplus
 };
 #endif
