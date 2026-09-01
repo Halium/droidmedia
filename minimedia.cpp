@@ -114,7 +114,11 @@ main(int, char**)
     // Camera service needs to be told which users may use the camera
     sp<IBinder> binder;
     do {
+#if ANDROID_MAJOR >= 11
         binder = sm->waitForService(String16("media.camera"));
+#else
+        binder = sm->getService(String16("media.camera"));
+#endif
         if (binder != NULL) {
             break;
         }
